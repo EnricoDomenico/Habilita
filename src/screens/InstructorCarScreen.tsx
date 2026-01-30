@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Car, Bike, AlertCircle } from 'lucide-react';
+import { Car, Bike, AlertCircle, Truck, Bus } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Layout } from '../components/Layout';
 
@@ -9,26 +9,52 @@ export const InstructorCarScreen: React.FC = () => {
     model: userData.instructorData?.car.model || '',
     year: userData.instructorData?.car.year || new Date().getFullYear(),
     plate: userData.instructorData?.car.plate || '',
-    category: userData.instructorData?.car.category || 'B' as 'A' | 'B',
+    category: userData.instructorData?.car.category || 'B' as 'A' | 'B' | 'C' | 'D' | 'E',
     transmission: userData.instructorData?.car.transmission || 'manual' as 'manual' | 'automatic',
   });
 
   const [yearError, setYearError] = useState('');
 
-  const handleYearChange = (year: number) => {
-    if (year < 2011) {
-      setYearError('O veículo deve ser de 2011 ou mais recente');
-    } else {
-      setYearError('');
+  // Validação de ano por categoria (Lei 2026)
+  const getMinYearForCategory = (category: string): number => {
+    const currentYear = new Date().getFullYear();
+    if (category === 'B') {
+      return currentYear - 12; // Categoria B: máximo 12 anos
     }
+    if (['C', 'D', 'E'].includes(category)) {
+      return currentYear - 20; // Categorias C/D/E: máximo 20 anos
+    }
+    return currentYear - 12; // Padrão
+  };
+
+  const validateYear = (year: number, category: string) => {
+    const minYear = getMinYearForCategory(category);
+    if (year < minYear) {
+      const maxAge = category === 'B' ? 12 : 20;
+      setYearError(`Veículos categoria ${category} devem ter no máximo ${maxAge} anos (ano mínimo: ${minYear})`);
+      return false;
+    }
+    setYearError('');
+    return true;
+  };
+
+  const handleYearChange = (year: number) => {
+    validateYear(year, formData.category);
     setFormData(prev => ({ ...prev, year }));
+  };
+
+  const handleCategoryChange = (category: 'A' | 'B' | 'C' | 'D' | 'E') => {
+    setFormData(prev => ({ ...prev, category }));
+    validateYear(formData.year, category);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (formData.year < 2011) {
-      setYearError('O veículo deve ser de 2011 ou mais recente');
+    const minYear = getMinYearForCategory(formData.category);
+    if (formData.year < minYear) {
+      const maxAge = formData.category === 'B' ? 12 : 20;
+      setYearError(`Veículos categoria ${formData.category} devem ter no máximo ${maxAge} anos`);
       return;
     }
 
@@ -46,8 +72,17 @@ export const InstructorCarScreen: React.FC = () => {
   };
 
   const isFormValid = () => {
-    return formData.model && formData.year >= 2011 && formData.plate && !yearError;
+    const minYear = getMinYearForCategory(formData.category);
+    return formData.model && formData.year >= minYear && formData.plate && !yearError;
   };
+
+  const categories = [
+    { id: 'A' as const, name: 'Moto', desc: 'Cat. A', Icon: Bike },
+    { id: 'B' as const, name: 'Carro', desc: 'Cat. B', Icon: Car },
+    { id: 'C' as const, name: 'Caminhão', desc: 'Cat. C', Icon: Truck },
+    { id: 'D' as const, name: 'Ônibus', desc: 'Cat. D', Icon: Bus },
+    { id: 'E' as const, name: 'Carreta', desc: 'Cat. E', Icon: Truck },
+  ];
 
   return (
     <Layout title="Cadastro do Veículo">
@@ -61,45 +96,36 @@ export const InstructorCarScreen: React.FC = () => {
           {/* Categoria */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, category: 'A' }))}
-                className={`p-4 rounded-lg border-2 transition-all ${
-                  formData.category === 'A'
-                    ? 'border-primary-600 bg-primary-50'
-                    : 'border-gray-300 bg-white'
-                }`}
-              >
-                <Bike size={24} className={`mx-auto mb-1 ${
-                  formData.category === 'A' ? 'text-primary-600' : 'text-gray-600'
-                }`} />
-                <span className={`block text-sm font-medium ${
-                  formData.category === 'A' ? 'text-primary-600' : 'text-gray-800'
-                }`}>
-                  Moto (Cat. A)
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, category: 'B' }))}
-                className={`p-4 rounded-lg border-2 transition-all ${
-                  formData.category === 'B'
-                    ? 'border-primary-600 bg-primary-50'
-                    : 'border-gray-300 bg-white'
-                }`}
-              >
-                <Car size={24} className={`mx-auto mb-1 ${
-                  formData.category === 'B' ? 'text-primary-600' : 'text-gray-600'
-                }`} />
-                <span className={`block text-sm font-medium ${
-                  formData.category === 'B' ? 'text-primary-600' : 'text-gray-800'
-                }`}>
-                  Carro (Cat. B)
-                </span>
-              </button>
+            <div className="grid grid-cols-3 gap-2">
+              {categories.map(({ id, name, desc, Icon }) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => handleCategoryChange(id)}
+                  className={`p-3 rounded-lg border-2 transition-all ${
+                    formData.category === id
+                      ? 'border-primary-600 bg-primary-50'
+                      : 'border-gray-300 bg-white'
+                  }`}
+                >
+                  <Icon size={20} className={`mx-auto mb-1 ${
+                    formData.category === id ? 'text-primary-600' : 'text-gray-600'
+                  }`} />
+                  <span className={`block text-xs font-medium ${
+                    formData.category === id ? 'text-primary-600' : 'text-gray-800'
+                  }`}>
+                    {desc}
+                  </span>
+                </button>
+              ))}
             </div>
+            <p className="text-xs text-gray-500 mt-2">
+              {formData.category === 'B' 
+                ? 'Categoria B: veículo com até 12 anos' 
+                : ['C', 'D', 'E'].includes(formData.category)
+                ? 'Categorias C/D/E: veículo com até 20 anos'
+                : 'Selecione a categoria do veículo'}
+            </p>
           </div>
 
           <div>
