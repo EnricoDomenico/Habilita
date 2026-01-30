@@ -1,11 +1,11 @@
 import React from 'react';
-import { Calendar, CheckCircle, Clock, User, Award } from 'lucide-react';
+import { Calendar, CheckCircle, Clock, User, Award, Play } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Layout } from '../components/Layout';
 import CarIcon from './imageslogos/6.png';
 
 export const StudentHomeScreen: React.FC = () => {
-  const { userData } = useApp();
+  const { userData, setCurrentScreen } = useApp();
   const scheduledClasses = userData.studentData?.scheduledClasses || [];
 
   const formatDate = (date: Date) => {
@@ -14,6 +14,10 @@ export const StudentHomeScreen: React.FC = () => {
       month: 'long',
       year: 'numeric'
     });
+  };
+
+  const handleStartClass = () => {
+    setCurrentScreen('class-mode');
   };
 
   return (
@@ -107,6 +111,19 @@ export const StudentHomeScreen: React.FC = () => {
         {/* Quick Actions */}
         <div>
           <h3 className="text-lg font-semibold text-brand-black mb-4">Ações Rápidas</h3>
+          
+          {/* Botão de Check-in de Aula - Destaque */}
+          {scheduledClasses.length > 0 && (
+            <button 
+              onClick={handleStartClass}
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl p-4 mb-3 shadow-lg 
+                       active:scale-98 transition-all duration-200 flex items-center justify-center space-x-3"
+            >
+              <Play size={24} />
+              <span className="font-bold text-lg">Check-in de Aula</span>
+            </button>
+          )}
+          
           <div className="grid grid-cols-2 gap-3">
             <button className="bg-white rounded-2xl p-6 text-center shadow-material 
                              active:scale-95 active:bg-gray-50 transition-all duration-200">

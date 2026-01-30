@@ -6,12 +6,15 @@ import { StudentCategoryScreen } from './screens/StudentCategoryScreen';
 import { StudentSearchInstructorScreen } from './screens/StudentSearchInstructorScreen';
 import { StudentScheduleScreen } from './screens/StudentScheduleScreen';
 import { StudentHomeScreen } from './screens/StudentHomeScreen';
+import { StudentMapSearchScreen } from './screens/StudentMapSearchScreen';
 import { InstructorCredentialsScreen } from './screens/InstructorCredentialsScreen';
 import { InstructorCarScreen } from './screens/InstructorCarScreen';
 import { InstructorAvailabilityScreen } from './screens/InstructorAvailabilityScreen';
 import { InstructorHomeScreen } from './screens/InstructorHomeScreen';
 import { ScheduleScreen } from './screens/ScheduleScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
+import { DocumentValidationScreen } from './screens/DocumentValidationScreen';
+import { ClassModeScreen } from './screens/ClassModeScreen';
 
 const AppContent: React.FC = () => {
   const { currentScreen } = useApp();
@@ -24,14 +27,20 @@ const AppContent: React.FC = () => {
       // Fluxo do Aluno
       case 'student-documents':
         return <StudentDocumentsScreen />;
+      case 'document-validation':
+        return <DocumentValidationScreen />;
       case 'student-category':
         return <StudentCategoryScreen />;
       case 'student-search-instructor':
         return <StudentSearchInstructorScreen />;
+      case 'student-map-search':
+        return <StudentMapSearchScreen />;
       case 'student-schedule':
         return <StudentScheduleScreen />;
       case 'student-home':
         return <StudentHomeScreen />;
+      case 'class-mode':
+        return <ClassModeScreen />;
       
       // Fluxo do Instrutor
       case 'instructor-credentials':

@@ -23,7 +23,7 @@ export const InstructorCredentialsScreen: React.FC = () => {
       }
     }));
 
-    setCurrentScreen('instructor-car');
+    setCurrentScreen('document-validation');
   };
 
   const isFormValid = () => {

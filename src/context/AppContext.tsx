@@ -13,10 +13,15 @@ export interface UserData {
       renach?: string;
       ladv?: File | null;
     };
-    category?: 'A' | 'B';
+    category?: 'A' | 'B' | 'C' | 'D' | 'E';
     transmission?: 'manual' | 'automatic';
     selectedInstructor?: any;
     scheduledClasses?: any[];
+    activeClass?: {
+      instructorName: string;
+      startTime: Date;
+      isActive: boolean;
+    } | null;
   };
   
   // Dados do Instrutor
@@ -30,7 +35,7 @@ export interface UserData {
       model?: string;
       year?: number;
       plate?: string;
-      category?: 'A' | 'B';
+      category?: 'A' | 'B' | 'C' | 'D' | 'E';
       transmission?: 'manual' | 'automatic';
     };
     availability?: {
@@ -39,6 +44,11 @@ export interface UserData {
       endTime: string;
     }[];
     price?: number;
+    activeClass?: {
+      studentName: string;
+      startTime: Date;
+      isActive: boolean;
+    } | null;
   };
 }
 

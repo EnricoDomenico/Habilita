@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Bike, CheckCircle } from 'lucide-react';
+import { Bike, CheckCircle, Truck, Bus } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Layout } from '../components/Layout';
 import CarIcon from './imageslogos/6.png';
 
 export const StudentCategoryScreen: React.FC = () => {
   const { userData, setUserData, setCurrentScreen } = useApp();
-  const [category, setCategory] = useState<'A' | 'B' | null>(
+  const [category, setCategory] = useState<'A' | 'B' | 'C' | 'D' | 'E' | null>(
     userData.studentData?.category || null
   );
   const [transmission, setTransmission] = useState<'manual' | 'automatic' | null>(
     userData.studentData?.transmission || null
   );
 
-  // Define transmissão manual automaticamente para categoria A
+  // Define transmissão manual automaticamente para categoria A, C, D e E
   useEffect(() => {
-    if (category === 'A' && !transmission) {
+    if (['A', 'C', 'D', 'E'].includes(category || '') && !transmission) {
       setTransmission('manual');
     }
   }, [category, transmission]);
@@ -30,9 +30,17 @@ export const StudentCategoryScreen: React.FC = () => {
           transmission,
         }
       }));
-      setCurrentScreen('student-search-instructor');
+      setCurrentScreen('student-map-search');
     }
   };
+
+  const categories = [
+    { id: 'A' as const, name: 'Categoria A', desc: 'Motos', Icon: Bike },
+    { id: 'B' as const, name: 'Categoria B', desc: 'Carros', Icon: null, image: CarIcon },
+    { id: 'C' as const, name: 'Categoria C', desc: 'Caminhões', Icon: Truck },
+    { id: 'D' as const, name: 'Categoria D', desc: 'Ônibus', Icon: Bus },
+    { id: 'E' as const, name: 'Categoria E', desc: 'Carretas', Icon: Truck },
+  ];
 
   return (
     <Layout title="Categoria">
@@ -47,55 +55,39 @@ export const StudentCategoryScreen: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold text-brand-black mb-4">Categoria</h3>
             <div className="grid grid-cols-2 gap-4">
-              <button
-                onClick={() => setCategory('A')}
-                className={`relative p-6 rounded-2xl border-2 transition-all duration-200 
-                         active:scale-95 ${
-                  category === 'A'
-                    ? 'border-brand-red bg-red-50 shadow-material'
-                    : 'border-gray-300 bg-white active:bg-gray-50'
-                }`}
-              >
-                {category === 'A' && (
-                  <div className="absolute top-2 right-2">
-                    <CheckCircle size={20} className="text-brand-red" />
-                  </div>
-                )}
-                <Bike size={48} className={`mx-auto mb-3 ${
-                  category === 'A' ? 'text-brand-red' : 'text-gray-600'
-                }`} />
-                <span className={`block font-semibold text-lg ${
-                  category === 'A' ? 'text-brand-red' : 'text-brand-black'
-                }`}>
-                  Categoria A
-                </span>
-                <span className="text-sm text-gray-600 block mt-1">Motos</span>
-              </button>
-
-              <button
-                onClick={() => setCategory('B')}
-                className={`relative p-6 rounded-2xl border-2 transition-all duration-200 
-                         active:scale-95 ${
-                  category === 'B'
-                    ? 'border-brand-red bg-red-50 shadow-material'
-                    : 'border-gray-300 bg-white active:bg-gray-50'
-                }`}
-              >
-                {category === 'B' && (
-                  <div className="absolute top-2 right-2">
-                    <CheckCircle size={20} className="text-brand-red" />
-                  </div>
-                )}
-                <img src={CarIcon} alt="Carro" className={`w-12 h-12 mx-auto mb-3 ${
-                  category === 'B' ? 'opacity-100' : 'opacity-60'
-                }`} />
-                <span className={`block font-semibold text-lg ${
-                  category === 'B' ? 'text-brand-red' : 'text-brand-black'
-                }`}>
-                  Categoria B
-                </span>
-                <span className="text-sm text-gray-600 block mt-1">Carros</span>
-              </button>
+              {categories.map(({ id, name, desc, Icon, image }) => (
+                <button
+                  key={id}
+                  onClick={() => setCategory(id)}
+                  className={`relative p-6 rounded-2xl border-2 transition-all duration-200 
+                           active:scale-95 ${
+                    category === id
+                      ? 'border-brand-red bg-red-50 shadow-material'
+                      : 'border-gray-300 bg-white active:bg-gray-50'
+                  }`}
+                >
+                  {category === id && (
+                    <div className="absolute top-2 right-2">
+                      <CheckCircle size={20} className="text-brand-red" />
+                    </div>
+                  )}
+                  {Icon ? (
+                    <Icon size={48} className={`mx-auto mb-3 ${
+                      category === id ? 'text-brand-red' : 'text-gray-600'
+                    }`} />
+                  ) : image ? (
+                    <img src={image} alt={name} className={`w-12 h-12 mx-auto mb-3 ${
+                      category === id ? 'opacity-100' : 'opacity-60'
+                    }`} />
+                  ) : null}
+                  <span className={`block font-semibold text-lg ${
+                    category === id ? 'text-brand-red' : 'text-brand-black'
+                  }`}>
+                    {name}
+                  </span>
+                  <span className="text-sm text-gray-600 block mt-1">{desc}</span>
+                </button>
+              ))}
             </div>
           </div>
 

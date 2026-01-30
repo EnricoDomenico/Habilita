@@ -91,7 +91,7 @@ export const StudentDocumentsScreen: React.FC = () => {
       }
     }));
 
-    setCurrentScreen('student-category');
+    setCurrentScreen('document-validation');
   };
 
   const isFormValid = () => {
