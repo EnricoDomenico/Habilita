@@ -138,8 +138,6 @@ export const StudentHomeScreen: React.FC = () => {
 
         {/* Conteúdo - 40% da tela */}
         <div className="flex-1 overflow-y-auto p-6 bg-brand-gray">
-        {/* Conteúdo - 40% da tela */}
-        <div className="flex-1 overflow-y-auto p-6 bg-brand-gray">
         <div className="mb-6">
           <h2 className="text-xl font-bold text-brand-black mb-1">Olá, Aluno!</h2>
           <p className="text-gray-600 text-sm">Pronto para sua próxima aula?</p>
