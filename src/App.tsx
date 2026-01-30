@@ -11,6 +11,7 @@ import { InstructorCredentialsScreen } from './screens/InstructorCredentialsScre
 import { InstructorCarScreen } from './screens/InstructorCarScreen';
 import { InstructorAvailabilityScreen } from './screens/InstructorAvailabilityScreen';
 import { InstructorHomeScreen } from './screens/InstructorHomeScreen';
+import { InstructorFinancialScreen } from './screens/InstructorFinancialScreen';
 import { ScheduleScreen } from './screens/ScheduleScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { DocumentValidationScreen } from './screens/DocumentValidationScreen';
@@ -51,6 +52,8 @@ const AppContent: React.FC = () => {
         return <InstructorAvailabilityScreen />;
       case 'instructor-home':
         return <InstructorHomeScreen />;
+      case 'instructor-financial':
+        return <InstructorFinancialScreen />;
       
       // Telas Comuns
       case 'schedule':
