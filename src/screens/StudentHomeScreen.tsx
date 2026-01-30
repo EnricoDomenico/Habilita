@@ -1,8 +1,7 @@
 import React from 'react';
-import { Calendar, CheckCircle, Clock, User, Award, Play } from 'lucide-react';
+import { Calendar, CheckCircle, Clock, User, Award, Play, GraduationCap } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Layout } from '../components/Layout';
-import CarIcon from './imageslogos/6.png';
 
 export const StudentHomeScreen: React.FC = () => {
   const { userData, setCurrentScreen } = useApp();
@@ -32,7 +31,7 @@ export const StudentHomeScreen: React.FC = () => {
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-red to-red-700 text-white mb-6 shadow-material-lg">
           <div className="p-6">
             <div className="flex items-center mb-4">
-              <img src={CarIcon} alt="Progresso" className="w-10 h-10 mr-3 opacity-90" />
+              <GraduationCap size={40} className="mr-3 opacity-90" />
               <h3 className="text-lg font-semibold">Seu Progresso</h3>
             </div>
             <div className="grid grid-cols-2 gap-6">

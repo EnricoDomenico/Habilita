@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Bike, CheckCircle, Truck, Bus } from 'lucide-react';
+import { Bike, CheckCircle, Truck, Bus, Car } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { Layout } from '../components/Layout';
-import CarIcon from './imageslogos/6.png';
 
 export const StudentCategoryScreen: React.FC = () => {
   const { userData, setUserData, setCurrentScreen } = useApp();
@@ -36,7 +35,7 @@ export const StudentCategoryScreen: React.FC = () => {
 
   const categories = [
     { id: 'A' as const, name: 'Categoria A', desc: 'Motos', Icon: Bike },
-    { id: 'B' as const, name: 'Categoria B', desc: 'Carros', Icon: null, image: CarIcon },
+    { id: 'B' as const, name: 'Categoria B', desc: 'Carros', Icon: Car },
     { id: 'C' as const, name: 'Categoria C', desc: 'Caminhões', Icon: Truck },
     { id: 'D' as const, name: 'Categoria D', desc: 'Ônibus', Icon: Bus },
     { id: 'E' as const, name: 'Categoria E', desc: 'Carretas', Icon: Truck },
@@ -55,7 +54,7 @@ export const StudentCategoryScreen: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold text-brand-black mb-4">Categoria</h3>
             <div className="grid grid-cols-2 gap-4">
-              {categories.map(({ id, name, desc, Icon, image }) => (
+              {categories.map(({ id, name, desc, Icon }) => (
                 <button
                   key={id}
                   onClick={() => setCategory(id)}
@@ -71,15 +70,9 @@ export const StudentCategoryScreen: React.FC = () => {
                       <CheckCircle size={20} className="text-brand-red" />
                     </div>
                   )}
-                  {Icon ? (
-                    <Icon size={48} className={`mx-auto mb-3 ${
-                      category === id ? 'text-brand-red' : 'text-gray-600'
-                    }`} />
-                  ) : image ? (
-                    <img src={image} alt={name} className={`w-12 h-12 mx-auto mb-3 ${
-                      category === id ? 'opacity-100' : 'opacity-60'
-                    }`} />
-                  ) : null}
+                  <Icon size={48} className={`mx-auto mb-3 ${
+                    category === id ? 'text-brand-red' : 'text-gray-600'
+                  }`} />
                   <span className={`block font-semibold text-lg ${
                     category === id ? 'text-brand-red' : 'text-brand-black'
                   }`}>
