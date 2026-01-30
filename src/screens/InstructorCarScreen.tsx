@@ -146,7 +146,7 @@ export const InstructorCarScreen: React.FC = () => {
               type="number"
               value={formData.year}
               onChange={(e) => handleYearChange(parseInt(e.target.value))}
-              min="2011"
+              min={getMinYearForCategory(formData.category)}
               max={new Date().getFullYear()}
               className={`input-field ${yearError ? 'border-red-500' : ''}`}
               required
@@ -157,7 +157,9 @@ export const InstructorCarScreen: React.FC = () => {
                 <span className="text-sm">{yearError}</span>
               </div>
             )}
-            <p className="text-xs text-gray-500 mt-1">Veículos devem ser de 2011 ou mais recentes</p>
+            <p className="text-xs text-gray-500 mt-1">
+              Ano mínimo permitido: {getMinYearForCategory(formData.category)} (conforme Lei 2026)
+            </p>
           </div>
 
           <div>

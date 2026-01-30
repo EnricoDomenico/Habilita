@@ -205,7 +205,7 @@ export const StudentHomeScreen: React.FC = () => {
           </button>
         )}
         </div>
-      </div>
+        </div>
     </Layout>
   );
 };
