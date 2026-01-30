@@ -9,19 +9,19 @@ export const StudentHomeScreen: React.FC = () => {
   const scheduledClasses = userData.studentData?.scheduledClasses || [];
   const [selectedCategory, setSelectedCategory] = useState<string>(userData.studentData?.category || 'B');
 
-  // Instrutores simulados próximos
+  // Instrutores em Jundiaí - SP
   const nearbyInstructors = [
     {
       id: 1,
       name: 'Carlos Santos',
       photo: 'https://i.pravatar.cc/150?img=12',
-      categories: ['B', 'C'],
+      categories: ['B'],
       transmission: 'manual' as const,
       price: 85.00,
-      vehicleModel: 'Volkswagen 9.170',
-      vehicleYear: 2020,
+      vehicleModel: 'Honda Civic 2022',
+      vehicleYear: 2022,
       rating: 4.8,
-      position: [-23.5505, -46.6333] as [number, number],
+      position: [-23.1864, -46.8982] as [number, number], // Centro
       availableNow: true,
     },
     {
@@ -30,38 +30,51 @@ export const StudentHomeScreen: React.FC = () => {
       photo: 'https://i.pravatar.cc/150?img=5',
       categories: ['B'],
       transmission: 'automatic' as const,
-      price: 75.00,
-      vehicleModel: 'Honda Civic',
-      vehicleYear: 2022,
+      price: 95.00,
+      vehicleModel: 'Toyota Corolla 2023',
+      vehicleYear: 2023,
       rating: 4.9,
-      position: [-23.5555, -46.6383] as [number, number],
+      position: [-23.1890, -46.8950] as [number, number], // Centro
       availableNow: false,
     },
     {
       id: 3,
-      name: 'Roberto Almeida',
+      name: 'Roberto Moto',
       photo: 'https://i.pravatar.cc/150?img=33',
-      categories: ['C', 'D'],
+      categories: ['A'],
       transmission: 'manual' as const,
-      price: 120.00,
-      vehicleModel: 'Mercedes-Benz Atego 1719',
-      vehicleYear: 2018,
+      price: 70.00,
+      vehicleModel: 'Honda CG 160 2021',
+      vehicleYear: 2021,
       rating: 4.7,
-      position: [-23.5455, -46.6283] as [number, number],
+      position: [-23.1750, -46.8920] as [number, number], // Vila Arens
       availableNow: true,
     },
     {
       id: 4,
       name: 'Fernanda Costa',
       photo: 'https://i.pravatar.cc/150?img=9',
-      categories: ['B', 'C', 'D'],
+      categories: ['B'],
       transmission: 'manual' as const,
-      price: 95.00,
-      vehicleModel: 'Iveco Daily',
-      vehicleYear: 2021,
+      price: 80.00,
+      vehicleModel: 'Volkswagen Gol 2020',
+      vehicleYear: 2020,
       rating: 5.0,
-      position: [-23.5605, -46.6403] as [number, number],
+      position: [-23.2010, -46.9120] as [number, number], // Eloy Chaves
       availableNow: true,
+    },
+    {
+      id: 5,
+      name: 'João Caminhoneiro',
+      photo: 'https://i.pravatar.cc/150?img=15',
+      categories: ['D'],
+      transmission: 'manual' as const,
+      price: 150.00,
+      vehicleModel: 'Mercedes-Benz OF-1721 2019',
+      vehicleYear: 2019,
+      rating: 4.6,
+      position: [-23.1650, -46.9050] as [number, number], // Retiro
+      availableNow: false,
     },
   ];
 

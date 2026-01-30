@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { X, Car, DollarSign, Settings } from 'lucide-react';
+import { PaymentBottomSheet } from './PaymentBottomSheet';
 
 // Fix para ícones do Leaflet
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -42,19 +43,30 @@ export const MapView: React.FC<MapViewProps> = ({
   selectedCategory 
 }) => {
   const [selectedInstructor, setSelectedInstructor] = useState<Instructor | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
   
-  // Centro padrão - São Paulo
-  const defaultCenter: [number, number] = [-23.5505, -46.6333];
+  // Centro do mapa - Jundiaí, SP
+  const defaultCenter: [number, number] = [-23.1864, -46.8982];
 
   const handleMarkerClick = (instructor: Instructor) => {
     setSelectedInstructor(instructor);
+    setShowPayment(false);
   };
 
   const handleSelectInstructor = () => {
+    setShowPayment(true);
+  };
+
+  const handlePaymentSuccess = () => {
     if (selectedInstructor) {
       onSelectInstructor(selectedInstructor);
+      setShowPayment(false);
       setSelectedInstructor(null);
     }
+  };
+
+  const handleClosePayment = () => {
+    setShowPayment(false);
   };
 
   // Filtrar instrutores pela categoria se selecionada
@@ -71,8 +83,8 @@ export const MapView: React.FC<MapViewProps> = ({
         style={{ zIndex: 0 }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         
         {filteredInstructors.map((instructor) => (
@@ -94,7 +106,7 @@ export const MapView: React.FC<MapViewProps> = ({
         ))}
       </MapContainer>
 
-      {/* Modal de Detalhes do Instrutor */}
+      {/* Modal de Detalhes do Instrutor - Bottom Sheet */}
       {selectedInstructor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-50">
           <div className="bg-white rounded-t-3xl w-full max-w-md p-6 animate-slide-up">
@@ -187,13 +199,23 @@ export const MapView: React.FC<MapViewProps> = ({
               {/* Botão de Seleção */}
               <button
                 onClick={handleSelectInstructor}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors mt-4"
+                className="w-full bg-brand-red text-white py-3 rounded-3xl font-bold hover:bg-red-700 transition-colors mt-4 shadow-lg active:scale-98"
               >
-                Agendar com este Instrutor
+                Pagar com Pix/Cartão
               </button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Payment Bottom Sheet */}
+      {showPayment && selectedInstructor && (
+        <PaymentBottomSheet
+          instructorName={selectedInstructor.name}
+          price={selectedInstructor.price}
+          onClose={handleClosePayment}
+          onPaymentSuccess={handlePaymentSuccess}
+        />
       )}
 
       <style>{`
