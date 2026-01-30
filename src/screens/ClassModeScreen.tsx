@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '../components/Layout';
 import { useApp } from '../context/AppContext';
-import { Play, Square, Star, Clock, MapPin } from 'lucide-react';
+import { Play, Square, Star, Clock, MapPin, Radio, CheckCircle2 } from 'lucide-react';
 
 interface ClassSession {
   instructorName: string;
   startTime: Date | null;
-  duration: number; // em segundos
+  duration: number;
   isActive: boolean;
+}
+
+interface Location {
+  lat: number;
+  lng: number;
+  timestamp: Date;
 }
 
 export const ClassModeScreen: React.FC = () => {
@@ -19,9 +25,44 @@ export const ClassModeScreen: React.FC = () => {
     isActive: false,
   });
 
+  const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
+  const [locationHistory, setLocationHistory] = useState<Location[]>([]);
+  const [dataSyncStatus, setDataSyncStatus] = useState<'idle' | 'syncing' | 'synced'>('idle');
+
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [showEvaluation, setShowEvaluation] = useState(false);
+
+  // Simulação de localização GPS
+  useEffect(() => {
+    let locationInterval: number;
+
+    if (session.isActive) {
+      // Localização inicial (São Paulo - Av. Paulista)
+      const baseLat = -23.5617;
+      const baseLng = -46.6558;
+
+      // Atualizar localização a cada 10 segundos
+      locationInterval = window.setInterval(() => {
+        const newLocation: Location = {
+          lat: baseLat + (Math.random() - 0.5) * 0.01,
+          lng: baseLng + (Math.random() - 0.5) * 0.01,
+          timestamp: new Date(),
+        };
+        
+        setCurrentLocation(newLocation);
+        setLocationHistory(prev => [...prev, newLocation]);
+
+        // Simular sincronização com SENATRAN
+        setDataSyncStatus('syncing');
+        setTimeout(() => setDataSyncStatus('synced'), 1500);
+      }, 10000);
+    }
+
+    return () => {
+      if (locationInterval) clearInterval(locationInterval);
+    };
+  }, [session.isActive]);
 
   // Timer
   useEffect(() => {
@@ -49,6 +90,15 @@ export const ClassModeScreen: React.FC = () => {
   };
 
   const handleStartClass = () => {
+    const initialLocation: Location = {
+      lat: -23.5617,
+      lng: -46.6558,
+      timestamp: new Date(),
+    };
+    
+    setCurrentLocation(initialLocation);
+    setLocationHistory([initialLocation]);
+    
     setSession({
       ...session,
       startTime: new Date(),
@@ -89,6 +139,10 @@ export const ClassModeScreen: React.FC = () => {
                 <p className="flex items-center space-x-2">
                   <MapPin size={18} className="text-blue-600" />
                   <span>Instrutor: <strong>{session.instructorName}</strong></span>
+                </p>
+                <p className="flex items-center space-x-2">
+                  <Radio size={18} className="text-green-600" />
+                  <span>Dados enviados ao SENATRAN: <strong>{locationHistory.length} pontos GPS</strong></span>
                 </p>
               </div>
             </div>
@@ -188,11 +242,53 @@ export const ClassModeScreen: React.FC = () => {
             </div>
 
             {/* Timer */}
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 mb-8 shadow-xl">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 mb-6 shadow-xl">
               <p className="text-white text-sm font-medium mb-2">Tempo Decorrido</p>
               <p className="text-white text-5xl font-bold font-mono">
                 {formatTime(session.duration)}
               </p>
+            </div>
+
+            {/* Localização e Sincronização */}
+            <div className="bg-white rounded-xl p-4 mb-6 shadow-lg">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <MapPin size={20} className="text-blue-600" />
+                  <span className="font-semibold text-gray-800">Localização GPS</span>
+                </div>
+                {dataSyncStatus === 'synced' && (
+                  <CheckCircle2 size={18} className="text-green-600" />
+                )}
+              </div>
+              
+              {currentLocation && (
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p>Lat: {currentLocation.lat.toFixed(6)}</p>
+                  <p>Lng: {currentLocation.lng.toFixed(6)}</p>
+                  <p className="text-xs">
+                    Última atualização: {currentLocation.timestamp.toLocaleTimeString('pt-BR')}
+                  </p>
+                </div>
+              )}
+
+              {/* Status de Sincronização */}
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <div className="flex items-center space-x-2">
+                  <Radio size={16} className={
+                    dataSyncStatus === 'synced' ? 'text-green-600' :
+                    dataSyncStatus === 'syncing' ? 'text-yellow-600 animate-pulse' :
+                    'text-gray-400'
+                  } />
+                  <span className="text-xs text-gray-600">
+                    {dataSyncStatus === 'synced' && 'Sincronizado com SENATRAN'}
+                    {dataSyncStatus === 'syncing' && 'Sincronizando...'}
+                    {dataSyncStatus === 'idle' && 'Aguardando'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {locationHistory.length} pontos GPS registrados
+                </p>
+              </div>
             </div>
 
             {/* Informações da Aula */}
